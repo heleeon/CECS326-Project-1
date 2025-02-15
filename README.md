@@ -3,7 +3,7 @@
 "How to Run File Copy Program"
 ---
 
--  In the terminal, type ```filecopy.py``` to run the program
+-  In the terminal, type ```./filecopy.py``` to run the program
 -  The program will ask for input for the file to *read* from. 
     - Type the file name: ```input.txt```
 -  The program will ask for input for the file to *write* to.
