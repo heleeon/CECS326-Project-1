@@ -3,6 +3,8 @@
 # Helen Ton
 
 import os
+import sys 
+
 def fileCopy(srcFile, destFile):
     '''
     Function: copies data from one file to another
@@ -19,7 +21,7 @@ def fileCopy(srcFile, destFile):
 
     # PARENT PROCESS (pid > 0) 
     if pid > 0:
-        os.close(r) # signal pipe that we do not need to read from it
+        os.close(r)     # signal pipe that we do not need to read from it
 
         # Opening source file
         try:
@@ -28,8 +30,16 @@ def fileCopy(srcFile, destFile):
                 os.write(w, data.encode())       # writing data in bytes to the pipe
             os.close(w)                          # signal pipe we are done writing 
         except IOError:
-            print("ERROR: Unable to open and read file: ", srcFile)
-    
+            print("\nERROR: Unable to open and read from source file:", srcFile)
+            sys.exit(1)
+        
+        # Waits for child process to finish running
+        os.wait()
+
+        # Output if program executes correctly
+        print(f'\nFile successfully copied from {srcFile} to {destFile}! :D')
+
+
     # CHILD PROCESS (pid == 0)
     if pid == 0:
         os.close(w) # signal pipe that we do not need to write to it
@@ -42,21 +52,25 @@ def fileCopy(srcFile, destFile):
             rFile.close()   
         except:
             print("ERROR: Unable to open and read from pipe")
+            os._exit(1) # exit w/ status 1 to indicate error
 
         # Opening destination file
         try:
             with open(destFile, 'w') as dest:
                 dest.write(pipeData)    # writing data from pipe to dest file
         except IOError:
-            print("ERROR: Unable to open and write to file: ", destFile)
+            print("ERROR: Unable to open and write to destination file:", destFile)
+            os._exit(1)  # exit w/ status 1 to indicate error
+
+        os._exit(0)  # exit w/ status 0 - child process runs successfully
 
 
 def main():
+    # Takes source file and destination file as inputs
     srcFile = input("Please type the file name you want to read from: " )
     destFile = input("Please type the file name you want to write to: ")
 
+    # Calls the fileCopy function
     fileCopy(srcFile, destFile)
-    # Output if program executes correctly
-    print(f'\nFile successfully copied from {srcFile} to {destFile}! :D')
 
 main()
