@@ -1,6 +1,6 @@
 # CECS326-Project-1
 ---
-title: "How to Run File Copy Program"
+"How to Run File Copy Program"
 ---
 
 -  In the terminal, type ```filecopy.py``` to run the program
